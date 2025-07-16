@@ -1,0 +1,29 @@
+services:
+  taskify:
+    container_name: "taskify"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3030:3030"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  postgres:
+    image: postgres:16.6-alpine3.20
+    container_name: "${POSTGRES_CONTAINER}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    ports:
+      - target: "${DB_PORT}"
+        published: "${DB_PORT}"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+volumes:
+  pg_data:

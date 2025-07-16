@@ -1,0 +1,5 @@
+.git
+tmp
+Makefile
+README.md
+.env.dev
